@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Conversii.MainPage"
+             BackgroundColor="LightSlateGray">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Start"
+            HorizontalOptions="Center">
+
+            <Label FontSize="24"
+                Text="Conversii"
+                   HorizontalOptions="Center"/>
+            <HorizontalStackLayout Spacing="25">
+                <Picker x:Name="Signed"
+                        FontSize="16"
+                        TitleColor="Black"
+                        Title="Which Type"
+                        SelectedIndex="0"
+                        SelectedItem="0"
+                        TextColor="White"
+                        VerticalOptions="Center"
+                        SelectedIndexChanged="OnSignedChanged">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>UnSigned</x:String>
+                            <x:String>Signed</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+                <Entry WidthRequest="300"
+                       HeightRequest="25"
+                       VerticalOptions="End"
+                       BackgroundColor="White"
+                       TextColor="Black"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       TextChanged="OnTextChanged"
+                       x:Name="TextEntry">
+                    <Entry.Behaviors>
+                        <toolkit:MaskedBehavior Mask="00000000000000000000000000000000" UnmaskedCharacter="0"/>
+                    </Entry.Behaviors>
+                    
+                </Entry>
+                <Picker x:Name="Base"
+                    FontSize="16"
+                    TitleColor="Black"
+                    Title="Base"
+                    SelectedIndex="0"
+                    SelectedItem="0"
+                    TextColor="White"
+                    VerticalOptions="Center"
+                    SelectedIndexChanged="OnBaseChanged">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Base-2</x:String>
+                            <x:String>Base-3</x:String>
+                            <x:String>Base-4</x:String>
+                            <x:String>Base-5</x:String>
+                            <x:String>Base-6</x:String>
+                            <x:String>Base-7</x:String>
+                            <x:String>Base-8</x:String>
+                            <x:String>Base-9</x:String>
+                            <x:String>Base-10</x:String>
+                            <x:String>Base-11</x:String>
+                            <x:String>Base-12</x:String>
+                            <x:String>Base-13</x:String>
+                            <x:String>Base-14</x:String>
+                            <x:String>Base-15</x:String>
+                            <x:String>Base-16</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+                <Entry WidthRequest="300"
+                       HeightRequest="25"
+                       VerticalOptions="End"
+                       BackgroundColor="White"
+                       TextColor="Black"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       x:Name="TextBox"
+                       IsReadOnly="True"/>
+                <Picker x:Name="BaseToConvert"
+                        FontSize="16"
+                        TitleColor="Black"
+                        Title="Base"
+                        SelectedIndex="0"
+                        SelectedItem="0"
+                        TextColor="White"
+                        VerticalOptions="Center"
+                        SelectedIndexChanged="OnToConvertBaseChanged">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Base-2</x:String>
+                            <x:String>Base-3</x:String>
+                            <x:String>Base-4</x:String>
+                            <x:String>Base-5</x:String>
+                            <x:String>Base-6</x:String>
+                            <x:String>Base-7</x:String>
+                            <x:String>Base-8</x:String>
+                            <x:String>Base-9</x:String>
+                            <x:String>Base-10</x:String>
+                            <x:String>Base-11</x:String>
+                            <x:String>Base-12</x:String>
+                            <x:String>Base-13</x:String>
+                            <x:String>Base-14</x:String>
+                            <x:String>Base-15</x:String>
+                            <x:String>Base-16</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+            </HorizontalStackLayout>
+
+
+
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
