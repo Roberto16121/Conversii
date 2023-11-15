@@ -1,11 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using System;
 
 namespace Conversii
 {
     public partial class MainPage : ContentPage
     {
-        Color Good, Bad;
+        readonly Color Good, Bad;
         bool isSigned = false, isDashAllowned = false;
         int numberBase = 2, toConvertBase = 10;
         string validCharacters = ".0123456789ABCDEF";
@@ -32,6 +33,9 @@ namespace Conversii
             OnTextChanged(sender, e);
         }
 
+        /// <summary>
+        /// Dash is allowed for signed numbers in any base except base-2
+        /// </summary>
         void CheckIfDashIsAllowed()
         {
             if (!isSigned || numberBase is 2)
@@ -59,13 +63,16 @@ namespace Conversii
 
         private void OnTextChanged(object sender, EventArgs e)
         {
+            //We reset the output text
             TextBox.Text = "";
             if(TextEntry.Text == null || TextEntry.Text.Length == 0 || TextEntry.Text.Length > textLenght)
                 return;
 
             string text = TextEntry.Text;
+            //currentValid holds the valid characters for the current base
             string currentValid = validCharacters.Substring(0, numberBase + 1);
             bool isValid = true;
+            //going through the text and checking if it contains only valid characters
             foreach (char c in text)
             {
                 if(isDashAllowned)
@@ -85,6 +92,7 @@ namespace Conversii
                     }
                 }   
             }
+            //if the input has this format x. we don't allow it
             if (text[text.Length - 1] == '.')
                 isValid = false;
             if(isValid)
@@ -102,6 +110,7 @@ namespace Conversii
         void DoConversion(string text)
         {
             bool negativeNumber = false;
+            //if it's a signed number we check if it's negative and remove the sign
             if(isSigned)
             {
                 string firstBit = text.Substring(0, 1);
@@ -123,6 +132,7 @@ namespace Conversii
                 }
             }
             
+            //We convert the number to decimal based on if it has decimal points or not
             string DecimalText = ConvertToDecimal(text);
             string Whole, Fraction = "0";
             bool hasDecimal = text.IndexOf('.') != -1;
@@ -136,17 +146,20 @@ namespace Conversii
                 Whole = DecimalText;
             Whole = ConvertWholeToBase(Whole, toConvertBase);
             
+            
             if (Whole.Length == 0)
                 Whole = "0";
             bool startsWithZero = Whole[0] == '0';
+            //We add the whole part and the fraction part to the output text
             TextBox.Text = hasDecimal ? (Whole + "." + Fraction) : (Whole);
+            //if it's a negative number we add the sign based on the base we convert to
             if (negativeNumber)
             {
                 if (toConvertBase != 2)
                     TextBox.Text = "-" + TextBox.Text;
                 else if(startsWithZero)
                 {
-                    StringBuilder stringBuilder = new StringBuilder(TextBox.Text);
+                    StringBuilder stringBuilder = new(TextBox.Text);
                     stringBuilder[0] = '1';
                     TextBox.Text = stringBuilder.ToString();
                 }
@@ -156,6 +169,7 @@ namespace Conversii
 
         }
 
+        //Converts the whole part of the number from decimal to any base
         string ConvertWholeToBase(string whole, int toBase)
         {
             long number = long.Parse(whole);    
@@ -169,14 +183,15 @@ namespace Conversii
             return toRet;
         }
 
-        string ConvertFractionToBase(string fraction, int toBase) //.125
+        //converts the fraction part of the number from decimal to any base
+        string ConvertFractionToBase(string fraction, int toBase)
         {
             decimal number = decimal.Parse(fraction);
-            number = number / (decimal)Math.Pow(10, fraction.Length);
+            number /= (decimal)Math.Pow(10, fraction.Length);
             string toRet = "";
-            List<decimal> decimals = new List<decimal>();
+            List<decimal> decimals = new (); // it stores the decimals that we already encountered
             bool isRepeating = false;
-            int decimalPoints = 0, limit = 8;
+            int decimalPoints = 0, limit = 8; //limit is the maximum number of decimal points we allow
             while(!isRepeating && decimalPoints < limit)
             {
                 number *= toBase;
@@ -193,22 +208,24 @@ namespace Conversii
                     break;
                 decimalPoints++;
             }
+            //if a number is repeating we add the brackets
             if(isRepeating)
             {
                 decimals.IndexOf(number);
-                toRet = toRet.Substring(0, decimals.IndexOf(number)) + "(" + toRet.Substring(decimals.IndexOf(number)) + ")";
+                toRet = string.Concat(toRet.AsSpan(0, decimals.IndexOf(number)), "(", toRet.AsSpan(decimals.IndexOf(number)), ")");
             }
 
             return toRet;   
         }
 
-        string ConvertToDecimal(string text) /// 10111.011  101.11101 
+        //Converts a number from any base to decimal
+        string ConvertToDecimal(string text)
         {
-            int exp = 0;
+            int exp;
             if (text.IndexOf('.') != -1)
                 exp = text.IndexOf('.') - 1;
             else exp = text.Length - 1;
-            string toRet = "";
+            string toRet;
             decimal number = 0;
             foreach(char c in text)
             {
