@@ -42,7 +42,7 @@
                        TextChanged="OnTextChanged"
                        x:Name="TextEntry">
                     <Entry.Behaviors>
-                        <toolkit:MaskedBehavior Mask="00000000000000000000000000000000" UnmaskedCharacter="0"/>
+                        <toolkit:MaskedBehavior Mask="0000000000000000" UnmaskedCharacter="0"/>
                     </Entry.Behaviors>
                     
                 </Entry>
