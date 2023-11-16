@@ -7,7 +7,6 @@ namespace Conversii
     public partial class MainPage : ContentPage
     {
         readonly Color Good, Bad;
-        bool isSigned = false, isDashAllowned = false;
         int numberBase = 2, toConvertBase = 10;
         string validCharacters = ".0123456789ABCDEF";
         int textLenght = 16;
@@ -15,41 +14,16 @@ namespace Conversii
         public MainPage()
         {
             InitializeComponent();
-            Signed.SelectedItem = "UnSigned";
             Base.SelectedItem = "Base-2";
             BaseToConvert.SelectedItem = "Base-10";
             Good = new Color(0, 0, 0);
             Bad = new Color(255, 0, 0);
         }
 
-        private void OnSignedChanged(object sender, EventArgs e)
-        {
-            if (Signed.SelectedIndex == 0)
-                isSigned = false;
-            else
-                isSigned = true;
-            Trace.WriteLine(isSigned);
-            CheckIfDashIsAllowed();
-            OnTextChanged(sender, e);
-        }
-
-        /// <summary>
-        /// Dash is allowed for signed numbers in any base except base-2
-        /// </summary>
-        void CheckIfDashIsAllowed()
-        {
-            if (!isSigned || numberBase is 2)
-                isDashAllowned = false;
-            else
-                isDashAllowned = true;
-        }
-
-
 
         private void OnBaseChanged(object sender, EventArgs e)
         {
             numberBase = Base.SelectedIndex + 2;
-            CheckIfDashIsAllowed();
             OnTextChanged(sender, e);
 
         }
@@ -75,22 +49,13 @@ namespace Conversii
             //going through the text and checking if it contains only valid characters
             foreach (char c in text)
             {
-                if(isDashAllowned)
+                
+                if(!currentValid.Contains(c))
                 {
-                    if(!currentValid.Contains(c) && c != '-')
-                    {
-                        isValid = false;
-                        break;
-                    }
+                    isValid = false;
+                    break;
                 }
-                else
-                {
-                    if(!currentValid.Contains(c))
-                    {
-                        isValid = false;
-                        break;
-                    }
-                }   
+                 
             }
             //if the input has this format x. we don't allow it
             if (text[text.Length - 1] == '.')
@@ -109,28 +74,6 @@ namespace Conversii
 
         void DoConversion(string text)
         {
-            bool negativeNumber = false;
-            //if it's a signed number we check if it's negative and remove the sign
-            if(isSigned)
-            {
-                string firstBit = text.Substring(0, 1);
-                if (numberBase == 2)
-                {
-                    if(firstBit == "1")
-                    {
-                        negativeNumber = true;
-                        text = text.Substring(1);
-                    }
-                }
-                else
-                {
-                    if(firstBit == "-")
-                    {
-                        negativeNumber = true;
-                        text = text.Substring(1);
-                    }
-                }
-            }
             
             //We convert the number to decimal based on if it has decimal points or not
             string DecimalText = ConvertToDecimal(text);
@@ -152,20 +95,7 @@ namespace Conversii
             bool startsWithZero = Whole[0] == '0';
             //We add the whole part and the fraction part to the output text
             TextBox.Text = hasDecimal ? (Whole + "." + Fraction) : (Whole);
-            //if it's a negative number we add the sign based on the base we convert to
-            if (negativeNumber)
-            {
-                if (toConvertBase != 2)
-                    TextBox.Text = "-" + TextBox.Text;
-                else if(startsWithZero)
-                {
-                    StringBuilder stringBuilder = new(TextBox.Text);
-                    stringBuilder[0] = '1';
-                    TextBox.Text = stringBuilder.ToString();
-                }
-                else
-                    TextBox.Text = "1" + TextBox.Text;
-            }
+            
 
         }
 

@@ -16,22 +16,7 @@
                 Text="Conversii"
                    HorizontalOptions="Center"/>
             <HorizontalStackLayout Spacing="25">
-                <Picker x:Name="Signed"
-                        FontSize="16"
-                        TitleColor="Black"
-                        Title="Which Type"
-                        SelectedIndex="0"
-                        SelectedItem="0"
-                        TextColor="White"
-                        VerticalOptions="Center"
-                        SelectedIndexChanged="OnSignedChanged">
-                    <Picker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>UnSigned</x:String>
-                            <x:String>Signed</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
-                </Picker>
+                
                 <Entry WidthRequest="300"
                        HeightRequest="25"
                        VerticalOptions="End"
